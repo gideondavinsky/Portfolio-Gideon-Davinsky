@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact — Gideon Davinsky</title>
+<meta name="description" content="Get in touch with Gideon Davinsky, a GIS and urban data analyst based in Madrid, for GIS, urban mobility, or smart-cities roles.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gideon Davinsky — GIS Portfolio">
+<meta property="og:title" content="Contact — Gideon Davinsky">
+<meta property="og:description" content="Get in touch with Gideon Davinsky, a GIS and urban data analyst based in Madrid, for GIS, urban mobility, or smart-cities roles.">
+<meta property="og:image" content="assets/og/contact.png">
+<meta property="og:url" content="contact.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%230f766e' d='M16 2a10 10 0 0 0-10 10c0 7 10 18 10 18s10-11 10-18A10 10 0 0 0 16 2z'/%3E%3Ccircle cx='16' cy='12' r='4' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a class="brand" href="index.html">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path fill="var(--accent)" d="M16 2a10 10 0 0 0-10 10c0 7 10 18 10 18s10-11 10-18A10 10 0 0 0 16 2z"/><circle cx="16" cy="12" r="4" fill="#fff"/></svg>
+      Gideon Davinsky
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+      <li><a href="projects.html" data-i18n="nav_projects">Projects</a></li>
+      <li><a href="about.html" data-i18n="nav_about">About / CV</a></li>
+      <li><a href="contact.html" aria-current="page" data-i18n="nav_contact">Contact</a></li>
+    </ul>
+    <div style="display:flex;gap:.5rem">
+      <button class="lang-toggle" data-i18n-aria="lang_toggle_aria" title="Español / English">ES</button>
+      <button class="theme-toggle" data-i18n-aria="theme_toggle_aria" title="Toggle theme">◐</button>
+      <button class="nav-toggle" data-i18n-aria="menu_aria" aria-expanded="false">☰</button>
+    </div>
+  </nav>
+</header>
+
+<main class="container section">
+  <h1 data-i18n="h_contact">Contact</h1>
+  <p class="lead prose" data-i18n="p_lead">I&rsquo;m based in Madrid and currently looking for GIS, urban mobility, or
+    smart-cities roles in Madrid and across the EU. Reach out by email or LinkedIn
+    &mdash; I&rsquo;m happy to talk through any of the projects on this site in more
+    detail or share the full methodology behind them.</p>
+
+  <div class="hero-actions" style="margin:1.5rem 0 2rem">
+    <a class="btn" href="mailto:gideondavinsky@gmail.com" data-i18n="btn_email">Email &mdash; gideondavinsky@gmail.com</a>
+    <a class="btn secondary" href="https://www.linkedin.com/in/gideon-davinsky" target="_blank" rel="noopener" data-i18n="btn_linkedin">LinkedIn</a>
+  </div>
+
+  <p class="muted" data-i18n="p_cv">Looking for background and experience first?
+    <a href="about.html" data-i18n="p_cv_link">See About &amp; download my CV</a>.</p>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div>&copy; <span id="year">2026</span> Gideon Davinsky</div>
+    <div class="social">
+      <a href="mailto:gideondavinsky@gmail.com" data-i18n="social_email">Email</a>
+      <a href="https://www.linkedin.com/in/gideon-davinsky" data-i18n="social_linkedin">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  window.PAGE_I18N = {
+    en: {
+      doc_title: "Contact — Gideon Davinsky",
+      doc_description: "Get in touch with Gideon Davinsky, a GIS and urban data analyst based in Madrid, for GIS, urban mobility, or smart-cities roles.",
+      h_contact: "Contact",
+      p_lead: "I’m based in Madrid and currently looking for GIS, urban mobility, or smart-cities roles in Madrid and across the EU. Reach out by email or LinkedIn — I’m happy to talk through any of the projects on this site in more detail or share the full methodology behind them.",
+      btn_email: "Email — gideondavinsky@gmail.com",
+      btn_linkedin: "LinkedIn",
+      p_cv: "Looking for background and experience first? <a href=\"about.html\">See About &amp; download my CV</a>."
+    },
+    es: {
+      doc_title: "Contacto — Gideon Davinsky",
+      doc_description: "Contacta con Gideon Davinsky, analista SIG y de datos urbanos con base en Madrid, para puestos de SIG, movilidad urbana o ciudades inteligentes.",
+      h_contact: "Contacto",
+      p_lead: "Tengo base en Madrid y actualmente busco puestos de SIG, movilidad urbana o ciudades inteligentes en Madrid y en el resto de la UE. Escríbeme por correo o LinkedIn — estaré encantado de hablar con más detalle sobre cualquiera de los proyectos de este sitio o de compartir su metodología completa.",
+      btn_email: "Correo — gideondavinsky@gmail.com",
+      btn_linkedin: "LinkedIn",
+      p_cv: "¿Buscas primero mi trayectoria y experiencia? <a href=\"about.html\">Consulta Sobre mí y descarga mi CV</a>."
+    }
+  };
+</script>
+<script src="js/i18n.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

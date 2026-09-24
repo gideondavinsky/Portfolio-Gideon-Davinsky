@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects — Gideon Davinsky</title>
+<meta name="description" content="Academic and professional GIS projects: spatial analysis, remote sensing, and web mapping case studies.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gideon Davinsky — GIS Portfolio">
+<meta property="og:title" content="Projects — Gideon Davinsky">
+<meta property="og:description" content="Academic and professional GIS projects: spatial analysis, remote sensing, and web mapping case studies.">
+<meta property="og:image" content="assets/og/projects.png">
+<meta property="og:url" content="projects.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%230f766e' d='M16 2a10 10 0 0 0-10 10c0 7 10 18 10 18s10-11 10-18A10 10 0 0 0 16 2z'/%3E%3Ccircle cx='16' cy='12' r='4' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a class="brand" href="index.html">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path fill="var(--accent)" d="M16 2a10 10 0 0 0-10 10c0 7 10 18 10 18s10-11 10-18A10 10 0 0 0 16 2z"/><circle cx="16" cy="12" r="4" fill="#fff"/></svg>
+      Gideon Davinsky
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" data-i18n="nav_home">Home</a></li>
+      <li><a href="projects.html" aria-current="page" data-i18n="nav_projects">Projects</a></li>
+      <li><a href="about.html" data-i18n="nav_about">About / CV</a></li>
+      <li><a href="contact.html" data-i18n="nav_contact">Contact</a></li>
+    </ul>
+    <div style="display:flex;gap:.5rem">
+      <button class="lang-toggle" data-i18n-aria="lang_toggle_aria" title="Español / English">ES</button>
+      <button class="theme-toggle" data-i18n-aria="theme_toggle_aria" title="Toggle theme">◐</button>
+      <button class="nav-toggle" data-i18n-aria="menu_aria" aria-expanded="false">☰</button>
+    </div>
+  </nav>
+</header>
+
+<main class="container section">
+  <h1 data-i18n="page_title">Projects</h1>
+  <p class="lead" data-i18n="page_lead">Case studies from graduate research and professional practice. Filter by type,
+    or open a project for methods, data sources, and an interactive map.</p>
+
+  <div class="filters" role="group" aria-label="Filter projects">
+    <button class="filter-btn" data-filter="all" aria-pressed="true" data-i18n="filter_all">All</button>
+    <button class="filter-btn" data-filter="academic" aria-pressed="false" data-i18n="tag_academic">Academic</button>
+    <button class="filter-btn" data-filter="professional" aria-pressed="false" data-i18n="tag_professional">Professional</button>
+  </div>
+
+  <div id="project-grid" class="card-grid"></div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div>&copy; <span id="year">2026</span> Gideon Davinsky</div>
+    <div class="social">
+      <a href="mailto:gideondavinsky@gmail.com" data-i18n="social_email">Email</a>
+      <a href="https://www.linkedin.com/in/gideon-davinsky" data-i18n="social_linkedin">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/projects-data.js"></script>
+<script>
+  window.PAGE_I18N = {
+    en: {
+      doc_title: "Projects — Gideon Davinsky",
+      doc_description: "Academic and professional GIS projects: spatial analysis, remote sensing, and web mapping case studies.",
+      page_title: "Projects",
+      page_lead: "Case studies from graduate research and professional practice. Filter by type, or open a project for methods, data sources, and an interactive map.",
+      filter_all: "All"
+    },
+    es: {
+      doc_title: "Proyectos — Gideon Davinsky",
+      doc_description: "Proyectos académicos y profesionales de SIG: análisis espacial, teledetección y casos de cartografía web.",
+      page_title: "Proyectos",
+      page_lead: "Casos de estudio de investigación de posgrado y práctica profesional. Filtra por tipo, o abre un proyecto para ver la metodología, las fuentes de datos y un mapa interactivo.",
+      filter_all: "Todos"
+    }
+  };
+</script>
+<script src="js/i18n.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

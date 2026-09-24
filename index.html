@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gideon Davinsky — GIS Portfolio</title>
+<meta name="description" content="Portfolio of Gideon Davinsky, a GIS and urban data analyst based in Madrid: urban mobility, accessibility, and environmental analysis.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gideon Davinsky — GIS Portfolio">
+<meta property="og:title" content="Gideon Davinsky — GIS Portfolio">
+<meta property="og:description" content="Portfolio of Gideon Davinsky, a GIS and urban data analyst based in Madrid: urban mobility, accessibility, and environmental analysis.">
+<meta property="og:image" content="assets/og/home.png">
+<meta property="og:url" content="index.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%230f766e' d='M16 2a10 10 0 0 0-10 10c0 7 10 18 10 18s10-11 10-18A10 10 0 0 0 16 2z'/%3E%3Ccircle cx='16' cy='12' r='4' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a class="brand" href="index.html">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path fill="var(--accent)" d="M16 2a10 10 0 0 0-10 10c0 7 10 18 10 18s10-11 10-18A10 10 0 0 0 16 2z"/><circle cx="16" cy="12" r="4" fill="#fff"/></svg>
+      Gideon Davinsky
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" aria-current="page" data-i18n="nav_home">Home</a></li>
+      <li><a href="projects.html" data-i18n="nav_projects">Projects</a></li>
+      <li><a href="about.html" data-i18n="nav_about">About / CV</a></li>
+      <li><a href="contact.html" data-i18n="nav_contact">Contact</a></li>
+    </ul>
+    <div style="display:flex;gap:.5rem">
+      <button class="lang-toggle" data-i18n-aria="lang_toggle_aria" title="Español / English">ES</button>
+      <button class="theme-toggle" data-i18n-aria="theme_toggle_aria" title="Toggle theme">◐</button>
+      <button class="nav-toggle" data-i18n-aria="menu_aria" aria-expanded="false">☰</button>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="container hero">
+    <p class="eyebrow" data-i18n="eyebrow">GIS &amp; Urban Data Analyst &middot; Madrid</p>
+    <h1 data-i18n="hero_title">Mapping the questions that don&rsquo;t fit on a single layer.</h1>
+    <p class="lead" data-i18n="hero_lead">
+      I&rsquo;m a GIS and urban data analyst based in Madrid, working across pedestrian
+      accessibility, environmental monitoring, and policy-ready analysis for public
+      administrations. This is a selection of academic and professional work &mdash;
+      each with the methods, data, and an interactive map you can explore.
+    </p>
+    <div class="hero-actions">
+      <a class="btn" href="projects.html" data-i18n="btn_view_projects">View projects</a>
+      <a class="btn secondary" href="about.html" data-i18n="btn_about_cv">About &amp; CV</a>
+    </div>
+  </section>
+
+  <section class="container section">
+    <h2 data-i18n="featured_heading">Featured work</h2>
+    <p class="muted" data-i18n="featured_sub">A few representative projects. <a href="projects.html">See all &rarr;</a></p>
+    <div id="featured-projects" class="card-grid"></div>
+  </section>
+
+  <section class="container section">
+    <h2 data-i18n="whatido_heading">What I do</h2>
+    <div class="card-grid">
+      <div class="card"><div class="body">
+        <h3 data-i18n="whatido_1_title">Urban mobility &amp; accessibility</h3>
+        <p class="muted" data-i18n="whatido_1_body">Pedestrian and transport network analysis, accessibility indices, and
+          suitability models built with ArcGIS Network Analyst and pgRouting.</p>
+      </div></div>
+      <div class="card"><div class="body">
+        <h3 data-i18n="whatido_2_title">Environmental &amp; remote sensing analysis</h3>
+        <p class="muted" data-i18n="whatido_2_body">NDVI and land-cover change detection, solar radiation and shading models,
+          and climate-risk analysis from satellite and LiDAR data.</p>
+      </div></div>
+      <div class="card"><div class="body">
+        <h3 data-i18n="whatido_3_title">Policy-ready cartography &amp; reporting</h3>
+        <p class="muted" data-i18n="whatido_3_body">Technical reports and interactive web maps that translate spatial analysis
+          into evidence public administrations can act on.</p>
+      </div></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div>&copy; <span id="year">2026</span> Gideon Davinsky &middot; <span data-i18n="footer_built">Built as a static site.</span></div>
+    <div class="social">
+      <a href="mailto:gideondavinsky@gmail.com" data-i18n="social_email">Email</a>
+      <a href="https://www.linkedin.com/in/gideon-davinsky" data-i18n="social_linkedin">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script src="js/projects-data.js"></script>
+<script>
+  window.PAGE_I18N = {
+    en: {
+      doc_title: "Gideon Davinsky — GIS Portfolio",
+      doc_description: "Portfolio of Gideon Davinsky, a GIS and urban data analyst based in Madrid: urban mobility, accessibility, and environmental analysis.",
+      eyebrow: "GIS &amp; Urban Data Analyst &middot; Madrid",
+      hero_title: "Mapping the questions that don’t fit on a single layer.",
+      hero_lead: "I’m a GIS and urban data analyst based in Madrid, working across pedestrian accessibility, environmental monitoring, and policy-ready analysis for public administrations. This is a selection of academic and professional work — each with the methods, data, and an interactive map you can explore.",
+      btn_view_projects: "View projects",
+      btn_about_cv: "About &amp; CV",
+      featured_heading: "Featured work",
+      featured_sub: "A few representative projects. <a href=\"projects.html\">See all →</a>",
+      whatido_heading: "What I do",
+      whatido_1_title: "Urban mobility &amp; accessibility",
+      whatido_1_body: "Pedestrian and transport network analysis, accessibility indices, and suitability models built with ArcGIS Network Analyst and pgRouting.",
+      whatido_2_title: "Environmental &amp; remote sensing analysis",
+      whatido_2_body: "NDVI and land-cover change detection, solar radiation and shading models, and climate-risk analysis from satellite and LiDAR data.",
+      whatido_3_title: "Policy-ready cartography &amp; reporting",
+      whatido_3_body: "Technical reports and hand-built interactive web maps &mdash; coded with MapLibre GL JS, not a drag-and-drop builder &mdash; that translate spatial analysis into evidence public administrations can act on."
+    },
+    es: {
+      doc_title: "Gideon Davinsky — Portafolio SIG",
+      doc_description: "Portafolio de Gideon Davinsky, analista SIG y de datos urbanos con base en Madrid: movilidad urbana, accesibilidad y análisis ambiental.",
+      eyebrow: "Analista SIG y de Datos Urbanos &middot; Madrid",
+      hero_title: "Cartografiando las preguntas que no caben en una sola capa.",
+      hero_lead: "Soy analista SIG y de datos urbanos con base en Madrid, trabajando en movilidad y urbanismo sostenible, accesibilidad peatonal y monitorización ambiental, con análisis orientado a la política pública para administraciones públicas. Esta es una selección de trabajo académico y profesional — cada uno con la metodología, los datos y un mapa interactivo para explorar.",
+      btn_view_projects: "Ver proyectos",
+      btn_about_cv: "Sobre mí y CV",
+      featured_heading: "Trabajo destacado",
+      featured_sub: "Algunos proyectos representativos. <a href=\"projects.html\">Ver todos →</a>",
+      whatido_heading: "Qué hago",
+      whatido_1_title: "Movilidad urbana y accesibilidad",
+      whatido_1_body: "Análisis de redes peatonales y de transporte para la movilidad sostenible, índices de accesibilidad y modelos de idoneidad con ArcGIS Network Analyst y pgRouting.",
+      whatido_2_title: "Análisis ambiental y teledetección",
+      whatido_2_body: "Detección de cambios NDVI y de cobertura del suelo, modelos de radiación solar y sombras, y análisis de riesgo climático a partir de datos satelitales y LiDAR.",
+      whatido_3_title: "Cartografía y reporting para política pública",
+      whatido_3_body: "Informes técnicos y mapas web interactivos programados a mano — con MapLibre GL JS, no con una herramienta de arrastrar y soltar — que traducen el análisis espacial en evidencia sobre la que las administraciones públicas pueden actuar."
+    }
+  };
+</script>
+<script src="js/i18n.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

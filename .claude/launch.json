@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "portfolio",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "4510", "--directory", "C:/Users/gideo/OneDrive/Documents/gis-portfolio"],
+      "port": 4510
+    }
+  ]
+}

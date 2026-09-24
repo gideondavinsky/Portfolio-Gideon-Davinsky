@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fluvial Flood Risk &amp; Resilience — Gideon Davinsky</title>
+<meta name="description" content="A T500 fluvial flood hazard-to-risk pipeline for Logroño, Spain: severity, exposure, national vulnerability index, and a composite risk map with a drainage recommendation.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Gideon Davinsky — GIS Portfolio">
+<meta property="og:title" content="Fluvial Flood Risk &amp; Resilience — Gideon Davinsky">
+<meta property="og:description" content="A T500 fluvial flood hazard-to-risk pipeline for Logroño, Spain: severity, exposure, national vulnerability index, and a composite risk map with a drainage recommendation.">
+<meta property="og:image" content="../assets/og/resilencia.png">
+<meta property="og:url" content="projects/logrono-flood-resilience.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%230f766e' d='M16 2a10 10 0 0 0-10 10c0 7 10 18 10 18s10-11 10-18A10 10 0 0 0 16 2z'/%3E%3Ccircle cx='16' cy='12' r='4' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a class="brand" href="../index.html">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path fill="var(--accent)" d="M16 2a10 10 0 0 0-10 10c0 7 10 18 10 18s10-11 10-18A10 10 0 0 0 16 2z"/><circle cx="16" cy="12" r="4" fill="#fff"/></svg>
+      Gideon Davinsky
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html" data-i18n="nav_home">Home</a></li>
+      <li><a href="../projects.html" data-i18n="nav_projects">Projects</a></li>
+      <li><a href="../about.html" data-i18n="nav_about">About / CV</a></li>
+      <li><a href="../contact.html" data-i18n="nav_contact">Contact</a></li>
+    </ul>
+    <div style="display:flex;gap:.5rem">
+      <button class="lang-toggle" data-i18n-aria="lang_toggle_aria" title="Español / English">ES</button>
+      <button class="theme-toggle" data-i18n-aria="theme_toggle_aria" title="Toggle theme">◐</button>
+      <button class="nav-toggle" data-i18n-aria="menu_aria" aria-expanded="false">☰</button>
+    </div>
+  </nav>
+</header>
+
+<main class="container section">
+  <a class="back-link" href="../projects.html">&larr; <span data-i18n="back_all_projects">All projects</span></a>
+  <div class="project-header">
+    <span class="tag" data-i18n="tag_academic">Academic</span>
+    <h1 data-i18n="p_title">Fluvial Flood Risk &amp; Resilience — Logroño</h1>
+    <p class="lead" data-i18n="p_lead">A hazard-to-risk pipeline for a 500-year fluvial flood scenario (T500) in
+      Logroño, Spain: flood severity, land-cover and road exposure, a national
+      urban vulnerability index, and a final composite risk map &mdash; with a
+      concrete drainage recommendation for the most exposed neighborhood.</p>
+  </div>
+
+  <dl class="project-meta">
+    <div><dt data-i18n="meta_type">Type</dt><dd data-i18n="v_type">Master&rsquo;s coursework deliverable</dd></div>
+    <div><dt data-i18n="meta_year">Year</dt><dd>2025 &ndash; 2026</dd></div>
+    <div><dt data-i18n="meta_role">Role</dt><dd data-i18n="v_role">Sole author</dd></div>
+    <div><dt data-i18n="meta_area">Study area</dt><dd data-i18n="v_area">Municipio de Logroño, La Rioja &mdash; 79 km&sup2;, ~152,000 inhabitants</dd></div>
+    <div><dt data-i18n="meta_tools">Tools</dt><dd>ArcGIS Pro, Spatial Analyst</dd></div>
+    <div><dt data-i18n="meta_data">Data</dt><dd data-i18n="v_data">T500 flood-hazard model, Urban Atlas land cover, INE census sections, national ISVUN-G vulnerability index</dd></div>
+  </dl>
+
+  <div class="season-toggle" role="group" aria-label="Layer">
+    <button class="season-btn" data-mode="severidad" aria-pressed="true" data-i18n="mode_severidad">Severity</button>
+    <button class="season-btn" data-mode="cubierta" aria-pressed="false" data-i18n="mode_cubierta">Land cover</button>
+    <button class="season-btn" data-mode="vulnerabilidad" aria-pressed="false" data-i18n="mode_vulnerabilidad">Vulnerability</button>
+    <button class="season-btn" data-mode="riesgo" aria-pressed="false" data-i18n="mode_riesgo">Risk</button>
+  </div>
+
+  <figure class="map-figure">
+    <div id="map-resilencia" class="map"></div>
+    <div id="resilencia-legend" class="map-legend" style="max-width:320px;margin:.85rem 0 0"></div>
+    <figcaption data-i18n="fig_caption">T500 fluvial flood layers for the municipality of Logroño: severity, land
+      cover, vulnerability, and composite risk. Severity and risk are shown as
+      a 50 m majority-class grid; land cover is a dissolved vector layer;
+      vulnerability is shown at its native census-section resolution. Click a
+      shape or section for details; switch layers above.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h2 data-i18n="h_objective">Objective</h2>
+    <p data-i18n="p_objective">A flood-hazard map shows where the water goes; it doesn&rsquo;t show who is
+      most exposed to the consequences. This project builds the full pipeline
+      from a T500 (500-year return period) flood-severity model through
+      land-cover and road-network exposure to a national urban-vulnerability
+      index, combining hazard and vulnerability into a single composite risk
+      map that can actually target a resilience intervention.</p>
+
+    <h2 data-i18n="h_method">Method</h2>
+    <p data-i18n="p_method_intro">The T500 flood-severity model (five depth-based classes, from a hydrological
+      simulation of the Ebro and Iregua rivers) was intersected with Urban
+      Atlas land cover and the municipal road network to quantify physical
+      exposure. Separately, the national ISVUN-G (Índice Sintético de
+      Vulnerabilidad Urbana Nacional &mdash; Global) index &mdash; a
+      pre-existing composite of social, economic, and environmental
+      indicators published at census-section level &mdash; was mapped across
+      the municipality. The final risk layer combines the two: each zone&rsquo;s
+      risk class reflects both how severe the flood hazard is and how
+      vulnerable the population living there already is, rather than hazard
+      alone.</p>
+
+    <h2 data-i18n="h_results">Results</h2>
+    <p data-i18n="p_results_1">Severity follows a continuous corridor along the riverbed and its immediate
+      floodplain, with the most affected areas north of the Ebro &mdash; the
+      historic core and industrial zones to the east &mdash; and a second,
+      less extreme zone around the Ebro&ndash;Iregua confluence. Most of the
+      exposed land cover is arable land (46%) and pasture/permanent crops
+      (a further 24%), which limits the population directly affected, but
+      88&nbsp;ha of road network and roughly 4.0&nbsp;km&sup2; of combined
+      urban/infrastructural land is also exposed.</p>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr>
+          <th data-i18n="th_severity">Severity</th><th data-i18n="th_roads">Exposed road network</th>
+        </tr></thead>
+        <tbody>
+          <tr><td data-i18n="sev_low">Low</td><td class="num">2,990 m</td></tr>
+          <tr><td data-i18n="sev_mod">Moderate</td><td class="num">6,682 m</td></tr>
+          <tr><td data-i18n="sev_high">High</td><td class="num">3,732 m</td></tr>
+          <tr><td data-i18n="sev_vhigh">Very high</td><td class="num">1,727 m</td></tr>
+          <tr><td data-i18n="sev_ehigh">Extremely high</td><td class="num">875 m</td></tr>
+          <tr><td data-i18n="th_total"><b>Total</b></td><td class="num"><b>~16.0 km</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p data-i18n="p_results_2">Barrio San Antonio &mdash; north of the Ebro, facing the historic core &mdash;
+      carries the most exposed road network of any neighborhood, consistent
+      with its denser, more traditional urban fabric. It also scores very
+      high on the ISVUN-G vulnerability index, compounding its exposure. At
+      the municipal scale, the final risk map concentrates around three
+      distinct zones along the river corridor: the San Antonio residential
+      area, the largely agricultural zone around Pasada Canicalejo to the
+      southeast, and the Polígono Industrial Cantabria to the northeast &mdash;
+      each implying a different kind of resilience response given how
+      differently that land is used.</p>
+
+    <h2 data-i18n="h_recommendations">Recommendations</h2>
+    <p data-i18n="p_recommendations">Given San Antonio&rsquo;s combination of high road exposure, high vulnerability,
+      and proximity to the historic core, prioritize it for a concrete
+      intervention: sustainable urban drainage systems (SUDS) integrated into
+      buildings and streets to manage runoff effectively. The neighborhood&rsquo;s
+      susceptibility to standing water is compounded by its scarcity of
+      permeable, unbuilt land nearby that could otherwise absorb it.</p>
+
+    <h2 data-i18n="h_future">Possible extensions</h2>
+    <ul>
+      <li data-i18n="future_1">Repeat the analysis for less extreme but more frequent return periods
+        (T100, T10) to see how the risk footprint changes.</li>
+      <li data-i18n="future_2">Model the risk-reduction effect of the recommended SUDS intervention
+        directly, rather than proposing it only qualitatively.</li>
+      <li data-i18n="future_3">Incorporate real-time river-gauge data to move from a static
+        return-period model toward an early-warning application.</li>
+    </ul>
+
+    <p class="notice" data-i18n="notice">Severity and risk are shown as a 50 m majority-class grid, aggregated from
+      a much finer raw hazard model so the full municipal extent loads
+      quickly in a browser; vulnerability is shown at its native
+      census-section resolution. Methodology and full results: coursework
+      report, Universidad Complutense de Madrid, 2025.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div>&copy; <span id="year">2026</span> Gideon Davinsky</div>
+    <div class="social">
+      <a href="mailto:gideondavinsky@gmail.com" data-i18n="social_email">Email</a>
+      <a href="https://www.linkedin.com/in/gideon-davinsky" data-i18n="social_linkedin">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  window.PAGE_I18N = {
+    en: {
+      doc_title: "Fluvial Flood Risk & Resilience — Gideon Davinsky",
+      doc_description: "A T500 fluvial flood hazard-to-risk pipeline for Logroño, Spain: severity, exposure, national vulnerability index, and a composite risk map with a drainage recommendation.",
+      p_title: "Fluvial Flood Risk & Resilience — Logroño",
+      p_lead: "A hazard-to-risk pipeline for a 500-year fluvial flood scenario (T500) in Logroño, Spain: flood severity, land-cover and road exposure, a national urban vulnerability index, and a final composite risk map — with a concrete drainage recommendation for the most exposed neighborhood.",
+      v_type: "Master’s coursework deliverable",
+      v_role: "Sole author",
+      v_area: "Municipio de Logroño, La Rioja — 79 km², ~152,000 inhabitants",
+      v_data: "T500 flood-hazard model, Urban Atlas land cover, INE census sections, national ISVUN-G vulnerability index",
+      mode_severidad: "Severity", mode_cubierta: "Land cover", mode_vulnerabilidad: "Vulnerability", mode_riesgo: "Risk",
+      fig_caption: "T500 fluvial flood layers for the municipality of Logroño: severity, land cover, vulnerability, and composite risk. Severity and risk are shown as a 50 m majority-class grid; land cover is a dissolved vector layer; vulnerability is shown at its native census-section resolution. Click a shape or section for details; switch layers above.",
+      h_objective: "Objective",
+      p_objective: "A flood-hazard map shows where the water goes; it doesn’t show who is most exposed to the consequences. This project builds the full pipeline from a T500 (500-year return period) flood-severity model through land-cover and road-network exposure to a national urban-vulnerability index, combining hazard and vulnerability into a single composite risk map that can actually target a resilience intervention.",
+      h_method: "Method",
+      p_method_intro: "The T500 flood-severity model (five depth-based classes, from a hydrological simulation of the Ebro and Iregua rivers) was intersected with Urban Atlas land cover and the municipal road network to quantify physical exposure. Separately, the national ISVUN-G (Índice Sintético de Vulnerabilidad Urbana Nacional — Global) index — a pre-existing composite of social, economic, and environmental indicators published at census-section level — was mapped across the municipality. The final risk layer combines the two: each zone’s risk class reflects both how severe the flood hazard is and how vulnerable the population living there already is, rather than hazard alone.",
+      h_results: "Results",
+      p_results_1: "Severity follows a continuous corridor along the riverbed and its immediate floodplain, with the most affected areas north of the Ebro — the historic core and industrial zones to the east — and a second, less extreme zone around the Ebro–Iregua confluence. Most of the exposed land cover is arable land (46%) and pasture/permanent crops (a further 24%), which limits the population directly affected, but 88 ha of road network and roughly 4.0 km² of combined urban/infrastructural land is also exposed.",
+      th_severity: "Severity", th_roads: "Exposed road network", th_total: "Total",
+      sev_low: "Low", sev_mod: "Moderate", sev_high: "High", sev_vhigh: "Very high", sev_ehigh: "Extremely high",
+      p_results_2: "Barrio San Antonio — north of the Ebro, facing the historic core — carries the most exposed road network of any neighborhood, consistent with its denser, more traditional urban fabric. It also scores very high on the ISVUN-G vulnerability index, compounding its exposure. At the municipal scale, the final risk map concentrates around three distinct zones along the river corridor: the San Antonio residential area, the largely agricultural zone around Pasada Canicalejo to the southeast, and the Polígono Industrial Cantabria to the northeast — each implying a different kind of resilience response given how differently that land is used.",
+      h_recommendations: "Recommendations",
+      p_recommendations: "Given San Antonio’s combination of high road exposure, high vulnerability, and proximity to the historic core, prioritize it for a concrete intervention: sustainable urban drainage systems (SUDS) integrated into buildings and streets to manage runoff effectively. The neighborhood’s susceptibility to standing water is compounded by its scarcity of permeable, unbuilt land nearby that could otherwise absorb it.",
+      h_future: "Possible extensions",
+      future_1: "Repeat the analysis for less extreme but more frequent return periods (T100, T10) to see how the risk footprint changes.",
+      future_2: "Model the risk-reduction effect of the recommended SUDS intervention directly, rather than proposing it only qualitatively.",
+      future_3: "Incorporate real-time river-gauge data to move from a static return-period model toward an early-warning application.",
+      notice: "Severity and risk are shown as a 50 m majority-class grid, aggregated from a much finer raw hazard model so the full municipal extent loads quickly in a browser; vulnerability is shown at its native census-section resolution. Methodology and full results: coursework report, Universidad Complutense de Madrid, 2025.",
+      legend_severidad: "T500 severity", legend_riesgo: "T500 risk", legend_vulnerabilidad: "ISVUN-G vulnerability",
+      legend_cubierta: "Land cover",
+      cover_urban: "Urban / built-up", cover_industrial: "Industrial / commercial",
+      cover_transport: "Transport infrastructure", cover_agri: "Agricultural",
+      cover_green: "Green & natural", cover_water: "Water",
+      pop_class: "Class", pop_seccion: "Section", pop_isvun: "ISVUN-G index"
+    },
+    es: {
+      doc_title: "Riesgo y Resiliencia ante Inundación Fluvial — Gideon Davinsky",
+      doc_description: "Un pipeline de peligrosidad a riesgo para un escenario de inundación fluvial T500 en Logroño, España: severidad, exposición, índice nacional de vulnerabilidad y un mapa de riesgo compuesto con una recomendación de drenaje.",
+      p_title: "Riesgo y Resiliencia ante Inundación Fluvial — Logroño",
+      p_lead: "Un pipeline de peligrosidad a riesgo para un escenario de inundación fluvial de 500 años de periodo de retorno (T500) en Logroño, España: severidad de inundación, exposición de cubiertas de suelo y viario, un índice nacional de vulnerabilidad urbana, y un mapa final de riesgo compuesto — con una recomendación concreta de drenaje para el barrio más expuesto.",
+      v_type: "Entregable de asignatura de máster",
+      v_role: "Autor único",
+      v_area: "Municipio de Logroño, La Rioja — 79 km², ~152.000 habitantes",
+      v_data: "Modelo de peligrosidad T500, cubierta de suelo Urban Atlas, secciones censales del INE, índice nacional de vulnerabilidad ISVUN-G",
+      mode_severidad: "Severidad", mode_cubierta: "Cubierta de suelo", mode_vulnerabilidad: "Vulnerabilidad", mode_riesgo: "Riesgo",
+      fig_caption: "Capas de inundación fluvial T500 para el municipio de Logroño: severidad, cubierta de suelo, vulnerabilidad y riesgo compuesto. La severidad y el riesgo se muestran como una malla de ~50 m por clase mayoritaria; la cubierta de suelo es una capa vectorial disuelta; la vulnerabilidad se muestra a su resolución nativa de sección censal. Haz clic en una forma o sección para ver los detalles; cambia de capa arriba.",
+      h_objective: "Objetivo",
+      p_objective: "Un mapa de peligrosidad muestra hacia dónde va el agua; no muestra quién está más expuesto a sus consecuencias. Este proyecto construye el pipeline completo desde un modelo de severidad de inundación T500 (periodo de retorno de 500 años), pasando por la exposición de cubiertas de suelo y de la red viaria, hasta un índice nacional de vulnerabilidad urbana, combinando peligrosidad y vulnerabilidad en un único mapa de riesgo compuesto capaz de orientar una intervención de resiliencia real.",
+      h_method: "Metodología",
+      p_method_intro: "El modelo de severidad de inundación T500 (cinco clases según profundidad, a partir de una simulación hidrológica de los ríos Ebro e Iregua) se cruzó con la cubierta de suelo de Urban Atlas y la red viaria municipal para cuantificar la exposición física. Por separado, se cartografió en todo el municipio el índice nacional ISVUN-G (Índice Sintético de Vulnerabilidad Urbana Nacional — Global) — un índice compuesto preexistente de indicadores sociales, económicos y ambientales, publicado a escala de sección censal. La capa final de riesgo combina ambos: la clase de riesgo de cada zona refleja tanto la severidad de la inundación como la vulnerabilidad ya existente de la población que vive allí, no solo la peligrosidad.",
+      h_results: "Resultados",
+      p_results_1: "La severidad sigue un corredor continuo a lo largo del lecho fluvial y su llanura inmediata, con las áreas más afectadas al norte del Ebro — el casco histórico y zonas industriales al este — y una segunda zona, menos extrema, en torno a la confluencia Ebro–Iregua. La mayor parte de la cubierta afectada es tierra cultivable (46%) y pastos/cultivos permanentes (24% adicional), lo que limita la población directamente afectada, aunque también quedan expuestas 88 ha de red viaria y unos 4,0 km² de suelo urbano-infraestructural.",
+      th_severity: "Severidad", th_roads: "Viario expuesto", th_total: "Total",
+      sev_low: "Baja", sev_mod: "Moderada", sev_high: "Alta", sev_vhigh: "Muy alta", sev_ehigh: "Extremadamente alta",
+      p_results_2: "El barrio de San Antonio — al norte del Ebro, frente al casco histórico — concentra el viario más expuesto de todos los barrios, en consonancia con su tejido urbano más denso y tradicional. También puntúa muy alto en el índice de vulnerabilidad ISVUN-G, agravando su exposición. A escala municipal, el mapa final de riesgo se concentra en tres zonas diferenciadas a lo largo del corredor fluvial: el área residencial de San Antonio, la zona mayoritariamente agrícola en torno a la Pasada Canicalejo al sureste, y el Polígono Industrial Cantabria al noreste — cada una implicando un tipo de respuesta de resiliencia distinto dado el uso tan diferente de ese suelo.",
+      h_recommendations: "Recomendaciones",
+      p_recommendations: "Dada la combinación en San Antonio de alta exposición viaria, alta vulnerabilidad y cercanía al casco histórico, se recomienda priorizarlo para una intervención concreta: sistemas de drenaje urbano sostenible (SUDS) integrados en edificios y calles para gestionar la escorrentía de forma eficaz. La susceptibilidad del barrio a la permanencia de agua se agrava por la escasez de suelo permeable y sin edificar cerca que pudiera absorberla.",
+      h_future: "Posibles ampliaciones",
+      future_1: "Repetir el análisis para periodos de retorno menos extremos pero más frecuentes (T100, T10) para ver cómo cambia la huella de riesgo.",
+      future_2: "Modelizar directamente el efecto de reducción de riesgo de la intervención SUDS recomendada, en lugar de proponerla solo cualitativamente.",
+      future_3: "Incorporar datos de aforo fluvial en tiempo real para pasar de un modelo estático de periodo de retorno a una aplicación de alerta temprana.",
+      notice: "La severidad y el riesgo se muestran como una malla de ~50 m por clase mayoritaria, agregada a partir de un modelo de peligrosidad mucho más fino para que la extensión municipal completa cargue con rapidez en el navegador; la vulnerabilidad se muestra a su resolución nativa de sección censal. Metodología y resultados completos: informe de asignatura, Universidad Complutense de Madrid, 2025.",
+      legend_severidad: "Severidad T500", legend_riesgo: "Riesgo T500", legend_vulnerabilidad: "Vulnerabilidad ISVUN-G",
+      legend_cubierta: "Cubierta de suelo",
+      cover_urban: "Urbano / edificado", cover_industrial: "Industrial / comercial",
+      cover_transport: "Infraestructura de transporte", cover_agri: "Agrícola",
+      cover_green: "Verde y natural", cover_water: "Agua",
+      pop_class: "Clase", pop_seccion: "Sección", pop_isvun: "Índice ISVUN-G"
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/site.js"></script>
+<script src="../js/map.js"></script>
+<script>
+  (function () {
+    var COLORS = ["#1a9850", "#91cf60", "#fee08b", "#fc8d59", "#d73027"];
+    // Qualitative palette for land cover (not ordinal, so a distinct
+    // categorical set rather than the sequential green->red ramp above).
+    var COVER_COLORS = ["#a6761d", "#7570b3", "#666666", "#e6ab02", "#1b9e77", "#377eb8"];
+    var DATASETS = {
+      severidad: { url: "../data/logrono-severidad.geojson", field: "gridcode", legendKey: "legend_severidad" },
+      riesgo: { url: "../data/logrono-riesgo.geojson", field: "gridcode", legendKey: "legend_riesgo" },
+      cubierta: { url: "../data/logrono-cubierta.geojson", field: "category", legendKey: "legend_cubierta" },
+      vulnerabilidad: { url: "../data/logrono-vulnerabilidad.geojson", field: "isvun_g", legendKey: "legend_vulnerabilidad" }
+    };
+    var cache = {};
+    var mode = "severidad";
+    var currentData = null;
+    var SRC_ID = "resilencia-src";
+
+    // Distinct gridcode classes actually present in a loaded dataset,
+    // sorted ascending, each carrying its own already-correctly-gendered
+    // label from the data itself (severity's Spanish labels are feminine,
+    // "Baja"/"Alta"; risk's are masculine, "Bajo"/"Alto" -- reading them
+    // from the data avoids hardcoding either, and stays correct even
+    // though risk only has 4 classes where severity has 5).
+    function gridcodeClasses(data) {
+      var seen = {};
+      data.features.forEach(function (f) {
+        var p = f.properties;
+        if (seen[p.gridcode] == null) seen[p.gridcode] = p;
+      });
+      return Object.keys(seen).map(Number).sort(function (a, b) { return a - b; })
+        .map(function (gc) { return { gc: gc, label_es: seen[gc].label_es, label_en: seen[gc].label_en }; });
+    }
+
+    function t(key) { return (window.I18N && window.I18N.t(key)) || key; }
+
+    var map = new maplibregl.Map({
+      container: "map-resilencia",
+      style: GISPortfolio.STYLES[GISPortfolio.theme()],
+      center: [-2.445, 42.462],
+      zoom: 12,
+      attributionControl: { compact: true }
+    });
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
+    map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: "metric" }));
+
+    function fetchData(key) {
+      if (cache[key]) return Promise.resolve(cache[key]);
+      return fetch(DATASETS[key].url).then(function (r) { return r.json(); })
+        .then(function (data) { cache[key] = data; return data; });
+    }
+
+    function colorExprFor(key, data) {
+      var d = DATASETS[key];
+      if (d.field === "isvun_g") {
+        return GISPortfolio.stepExpr("isvun_g", [
+          [0, COLORS[0]], [0.2, COLORS[1]], [0.4, COLORS[2]], [0.6, COLORS[3]], [0.8, COLORS[4]]
+        ]);
+      }
+      if (d.field === "category") {
+        return GISPortfolio.matchExpr("category", [
+          [1, COVER_COLORS[0]], [2, COVER_COLORS[1]], [3, COVER_COLORS[2]],
+          [4, COVER_COLORS[3]], [5, COVER_COLORS[4]], [6, COVER_COLORS[5]]
+        ], "#999999");
+      }
+      // severity/risk: match on whichever gridcode classes are actually
+      // present, colored by ascending rank -- not a fixed 5, since risk
+      // only has 4.
+      var classes = gridcodeClasses(data);
+      var matches = classes.map(function (c, i) { return [c.gc, COLORS[i]]; });
+      return GISPortfolio.matchExpr("gridcode", matches, "#999999");
+    }
+
+    function addModeLayer(key, data) {
+      if (map.getLayer(SRC_ID + "-fill")) map.removeLayer(SRC_ID + "-fill");
+      if (map.getLayer(SRC_ID + "-outline")) map.removeLayer(SRC_ID + "-outline");
+      if (map.getSource(SRC_ID)) map.removeSource(SRC_ID);
+
+      // "municipio-outline" (the boundary reference layer) loads async and
+      // may not exist yet on the very first draw -- inserting a layer
+      // "before" a nonexistent layer id throws, so only pass beforeId when
+      // it's actually there. When it isn't yet, it gets added afterwards
+      // anyway and lands on top by default, which is the wanted stacking.
+      var beforeId = map.getLayer("municipio-outline") ? "municipio-outline" : undefined;
+      map.addSource(SRC_ID, { type: "geojson", data: data });
+      map.addLayer({
+        id: SRC_ID + "-fill", type: "fill", source: SRC_ID,
+        paint: { "fill-color": colorExprFor(key, data), "fill-opacity": 0.75 }
+      }, beforeId);
+      map.addLayer({
+        id: SRC_ID + "-outline", type: "line", source: SRC_ID,
+        paint: { "line-color": "rgba(255,255,255,.4)", "line-width": 0.5 }
+      }, beforeId);
+      if (map.getLayer("municipio-outline")) map.moveLayer("municipio-outline");
+
+      map.on("click", SRC_ID + "-fill", function (e) {
+        var p = e.features[0].properties;
+        var html;
+        if (DATASETS[key].field === "isvun_g") {
+          html = "<b>" + t("pop_seccion") + ":</b> " + p.label +
+            "<br><b>" + t("pop_isvun") + ":</b> " + p.isvun_g;
+        } else {
+          var label = (window.I18N && window.I18N.getLang() === "es") ? p.label_es : p.label_en;
+          html = "<b>" + t("pop_class") + ":</b> " + label;
+        }
+        GISPortfolio.openExclusivePopup(map, e.lngLat, html);
+      });
+      map.on("mouseenter", SRC_ID + "-fill", function () { map.getCanvas().style.cursor = "pointer"; });
+      map.on("mouseleave", SRC_ID + "-fill", function () { map.getCanvas().style.cursor = ""; });
+    }
+
+    function renderLegend() {
+      var el = document.getElementById("resilencia-legend");
+      var d = DATASETS[mode];
+      var rows;
+      // i18n.js fires "langchange" once on its own initial load (not just
+      // on a manual toggle), which can reach this before the map's own
+      // "load" -> loadMode() has fetched anything -- gridcode legends read
+      // currentData, so bail until there's data; loadMode's own
+      // renderLegend() call right after fetch resolves covers this case.
+      if (d.field !== "isvun_g" && d.field !== "category" && !currentData) return;
+      if (d.field === "isvun_g") {
+        var vLabels = ["< 0.2", "0.2 – 0.4", "0.4 – 0.6", "0.6 – 0.8", "≥ 0.8"];
+        rows = COLORS.map(function (c, i) { return [c, vLabels[i]]; });
+      } else if (d.field === "category") {
+        var coverLabels = [t("cover_urban"), t("cover_industrial"), t("cover_transport"),
+                            t("cover_agri"), t("cover_green"), t("cover_water")];
+        rows = COVER_COLORS.map(function (c, i) { return [c, coverLabels[i]]; });
+      } else {
+        var isEs = window.I18N && window.I18N.getLang() === "es";
+        rows = gridcodeClasses(currentData).map(function (c, i) {
+          return [COLORS[i], isEs ? c.label_es : c.label_en];
+        });
+      }
+      el.innerHTML = "<b>" + t(d.legendKey) + "</b>" +
+        rows.map(function (r) {
+          return '<div class="row"><span class="swatch" style="background:' + r[0] + '"></span>' + r[1] + "</div>";
+        }).join("");
+    }
+
+    function loadMode(key) {
+      mode = key;
+      fetchData(key).then(function (data) {
+        currentData = data;
+        addModeLayer(key, data);
+        renderLegend();
+      });
+    }
+
+    var municipioLoaded = false;
+    function addMunicipio() {
+      if (map.getSource("municipio-src")) return;
+      fetch("../data/logrono-municipio.geojson").then(function (r) { return r.json(); }).then(function (data) {
+        map.addSource("municipio-src", { type: "geojson", data: data });
+        map.addLayer({
+          id: "municipio-outline", type: "line", source: "municipio-src",
+          paint: { "line-color": "#0f766e", "line-width": 2, "line-dasharray": [2, 1] }
+        });
+        if (!municipioLoaded) {
+          municipioLoaded = true;
+          var b = [Infinity, Infinity, -Infinity, -Infinity];
+          function walk(c) {
+            if (typeof c[0] === "number") {
+              b[0] = Math.min(b[0], c[0]); b[1] = Math.min(b[1], c[1]);
+              b[2] = Math.max(b[2], c[0]); b[3] = Math.max(b[3], c[1]);
+            } else { c.forEach(walk); }
+          }
+          data.features.forEach(function (f) { walk(f.geometry.coordinates); });
+          map.fitBounds([[b[0], b[1]], [b[2], b[3]]], { padding: 30, duration: 0 });
+        }
+      });
+    }
+
+    function whenStyleLoaded(cb) {
+      if (map.isStyleLoaded()) { cb(); return; }
+      var done = false;
+      function finish() {
+        if (done || !map.isStyleLoaded()) return;
+        done = true; map.off("styledata", finish); clearInterval(timer); cb();
+      }
+      map.on("styledata", finish);
+      var tries = 0;
+      var timer = setInterval(function () { tries++; if (map.isStyleLoaded() || tries > 100) finish(); }, 100);
+    }
+
+    function draw() {
+      addMunicipio();
+      loadMode(mode);
+    }
+
+    map.on("load", draw);
+    document.addEventListener("themechange", function () {
+      map.setStyle(GISPortfolio.STYLES[GISPortfolio.theme()]);
+      whenStyleLoaded(draw);
+    });
+
+    document.querySelectorAll(".season-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        document.querySelectorAll(".season-btn").forEach(function (b) {
+          b.setAttribute("aria-pressed", String(b === btn));
+        });
+        loadMode(btn.dataset.mode);
+      });
+    });
+
+    document.addEventListener("langchange", renderLegend);
+  })();
+</script>
+</body>
+</html>

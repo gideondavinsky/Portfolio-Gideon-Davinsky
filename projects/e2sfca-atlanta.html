@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multimodal Healthcare Accessibility (E2SFCA) — Gideon Davinsky</title>
+<meta name="description" content="A multimodal E2SFCA model scoring 600 census tracts across metro Atlanta for hospital-bed access by drive, transit, and walk.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Gideon Davinsky — GIS Portfolio">
+<meta property="og:title" content="Multimodal Healthcare Accessibility (E2SFCA) — Gideon Davinsky">
+<meta property="og:description" content="A multimodal E2SFCA model scoring 600 census tracts across metro Atlanta for hospital-bed access by drive, transit, and walk.">
+<meta property="og:image" content="../assets/og/e2sfca.png">
+<meta property="og:url" content="projects/e2sfca-atlanta.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%230f766e' d='M16 2a10 10 0 0 0-10 10c0 7 10 18 10 18s10-11 10-18A10 10 0 0 0 16 2z'/%3E%3Ccircle cx='16' cy='12' r='4' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a class="brand" href="../index.html">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path fill="var(--accent)" d="M16 2a10 10 0 0 0-10 10c0 7 10 18 10 18s10-11 10-18A10 10 0 0 0 16 2z"/><circle cx="16" cy="12" r="4" fill="#fff"/></svg>
+      Gideon Davinsky
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html" data-i18n="nav_home">Home</a></li>
+      <li><a href="../projects.html" data-i18n="nav_projects">Projects</a></li>
+      <li><a href="../about.html" data-i18n="nav_about">About / CV</a></li>
+      <li><a href="../contact.html" data-i18n="nav_contact">Contact</a></li>
+    </ul>
+    <div style="display:flex;gap:.5rem">
+      <button class="lang-toggle" data-i18n-aria="lang_toggle_aria" title="Español / English">ES</button>
+      <button class="theme-toggle" data-i18n-aria="theme_toggle_aria" title="Toggle theme">◐</button>
+      <button class="nav-toggle" data-i18n-aria="menu_aria" aria-expanded="false">☰</button>
+    </div>
+  </nav>
+</header>
+
+<main class="container section">
+  <a class="back-link" href="../projects.html">&larr; <span data-i18n="back_all_projects">All projects</span></a>
+  <div class="project-header">
+    <span class="tag" data-i18n="tag_academic">Academic</span>
+    <h1 data-i18n="p_title">Multimodal Healthcare Accessibility (E2SFCA) &mdash; Atlanta</h1>
+    <p class="lead" data-i18n="p_lead">How many hospital beds can a household actually reach &mdash; not as the crow
+      flies, but by however they really travel? An Enhanced Two-Step Floating
+      Catchment Area (E2SFCA) model scoring 600 census tracts across Fulton, DeKalb,
+      and Clayton counties by drive, transit, and walk access to hospital beds.</p>
+  </div>
+
+  <dl class="project-meta">
+    <div><dt data-i18n="meta_type">Type</dt><dd data-i18n="v_type">Master&rsquo;s thesis research (TFM)</dd></div>
+    <div><dt data-i18n="meta_year">Year</dt><dd>2026</dd></div>
+    <div><dt data-i18n="meta_role">Role</dt><dd data-i18n="v_role">Sole researcher</dd></div>
+    <div><dt data-i18n="meta_area">Study area</dt><dd data-i18n="v_area">Fulton, DeKalb &amp; Clayton counties, metro Atlanta &mdash; 600 census tracts</dd></div>
+    <div><dt data-i18n="meta_tools">Tools</dt><dd>ArcGIS Pro, Network Analyst, Python</dd></div>
+    <div><dt data-i18n="meta_data">Data</dt><dd data-i18n="v_data">US Census ACS, CMS hospital provider data (bed counts), GTFS transit schedules, street network</dd></div>
+  </dl>
+
+  <div class="season-toggle" role="group" aria-label="Mode">
+    <button class="season-btn" data-mode="total" aria-pressed="true" data-i18n="mode_total_btn">Total (multimodal)</button>
+    <button class="season-btn" data-mode="drive" aria-pressed="false" data-i18n="mode_drive">Drive</button>
+    <button class="season-btn" data-mode="transit" aria-pressed="false" data-i18n="mode_transit">Transit</button>
+    <button class="season-btn" data-mode="walk" aria-pressed="false" data-i18n="mode_walk">Walk</button>
+  </div>
+
+  <label style="display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1rem;font-size:.9rem;cursor:pointer">
+    <input type="checkbox" id="toggle-hospitals" checked>
+    <span data-i18n="toggle_hospitals_label">Show hospitals</span>
+  </label>
+
+  <figure class="map-figure">
+    <div id="map-e2sfca" class="map"></div>
+    <div id="e2sfca-legend" class="map-legend" style="max-width:320px;margin:.85rem 0 0"></div>
+    <figcaption data-i18n="fig_caption">Multimodal accessibility score (hospital beds per 1,000 residents) by census
+      tract, with the 13 CMS-listed hospitals (red, sized by bed count). Click a
+      tract or a hospital for its full profile. Toggle to see each mode&rsquo;s
+      standalone accessibility (competitive access if everyone used only that
+      mode) instead of the combined score.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h2 data-i18n="h_objective">Objective</h2>
+    <p data-i18n="p_objective">Most healthcare-accessibility maps assume everyone drives. That systematically
+      overstates access for car-free households and hides where transit and walking
+      are actually doing the work &mdash; or failing to. This project built a
+      multimodal accessibility surface that scores each tract by the mode(s) its
+      residents actually use, to surface where hospital-bed access is genuinely
+      thin versus merely far from a highway.</p>
+
+    <h2 data-i18n="h_method">Method</h2>
+    <p data-i18n="p_method_intro">The model follows the multimodal Enhanced Two-Step Floating Catchment Area
+      method (E2SFCA) described by Mao &amp; Nekorchuk (2013), extending the
+      original 2SFCA with distance decay and multiple travel modes instead of a
+      single catchment radius.</p>
+
+    <h3 data-i18n="h_step1">Step 1 &mdash; supply-to-demand ratio</h3>
+    <p data-i18n="p_step1">For every hospital, a catchment is drawn per mode (drive, transit, walk) using
+      the travel times below. Within each catchment, its bed supply is divided by
+      the population reachable within that same catchment (also weighted by
+      distance decay), giving a supply-to-demand ratio for each mode.</p>
+
+    <h3 data-i18n="h_catchments">Catchments &amp; distance decay</h3>
+    <p data-i18n="p_catchments">Rather than a hard cutoff, each mode uses a tiered weighting scheme
+      approximating a Gaussian decay &mdash; closer is weighted higher, and the
+      weight steps down in stages out to the catchment&rsquo;s edge:</p>
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead><tr>
+          <th data-i18n="th_mode">Mode</th><th data-i18n="th_tiers">Time tiers (weight)</th>
+        </tr></thead>
+        <tbody>
+          <tr><td data-i18n="mode_drive">Drive</td><td>&le;10 min (1.0) &middot; &le;20 min (0.6) &middot; &le;30 min (0.2) &middot; &gt;30 min (0)</td></tr>
+          <tr><td data-i18n="mode_transit">Transit</td><td>&le;15 min (1.0) &middot; &le;30 min (0.7) &middot; &le;45 min (0.4) &middot; &le;60 min (0.1) &middot; &gt;60 min (0)</td></tr>
+          <tr><td data-i18n="mode_walk">Walk</td><td>&le;10 min (1.0) &middot; &le;20 min (0.6) &middot; &le;30 min (0.2) &middot; &gt;30 min (0)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 data-i18n="h_step2">Step 2 &mdash; accessibility at each tract</h3>
+    <p data-i18n="p_step2">Each tract sums the (decay-weighted) supply-to-demand ratios of every hospital
+      within reach, separately per mode. The three mode-specific scores are then
+      combined into a single multimodal index, weighted by that tract&rsquo;s own
+      local mode share &mdash; so a tract where a third of residents commute by
+      transit has its transit-mode score properly represented in its final score,
+      rather than averaged away against two modes fewer of its residents use.</p>
+    <p data-i18n="p_step2b">The three mode-specific scores are also available on their own (use the
+      toggle above the map). Each represents the competitive bed accessibility
+      available to a tract by that mode alone &mdash; still accounting for
+      cross-modal competition for the same beds &mdash; rather than what a
+      resident would see if the whole population switched to it.</p>
+
+    <h2 data-i18n="h_results">Results</h2>
+    <p data-i18n="p_results">The final index ranges from 0 to 5.3 beds per 1,000 residents across the
+      three counties (mean 2.67). Clayton County comes out clearly underserved
+      &mdash; a mean of 1.37, versus 2.90 in DeKalb and 2.79 in Fulton. Access also
+      rises with income: the highest-income tercile of tracts averages 2.98 versus
+      2.35 in the lowest. But the multimodal design surfaces a less obvious
+      pattern too: tracts with little or no vehicle access do not score worse on
+      average (2.86 vs. 2.39 for the lowest car-free tercile) &mdash; because
+      those tracts concentrate in the urban core, where transit and shorter walk
+      distances substantially offset the lack of a car. A drive-only model would
+      have missed that entirely.</p>
+
+    <h2 data-i18n="h_recommendations">Recommendations</h2>
+    <p data-i18n="p_recommendations">Target any near-term intervention &mdash; new transit routes, mobile clinics
+      &mdash; at Clayton County first, given its clearly lower mean score; and,
+      because car-free tracts are not uniformly underserved, prioritize by
+      tract-level accessibility score rather than by vehicle-ownership rate alone.</p>
+
+    <h2 data-i18n="h_future">Possible extensions</h2>
+    <ul>
+      <li data-i18n="future_1">Extend the study area to the full 13-county Atlanta Regional Commission
+        boundary.</li>
+      <li data-i18n="future_2">Weight hospitals by service type (e.g. trauma level, maternity) rather than
+        total bed count alone.</li>
+      <li data-i18n="future_3">Validate the modeled catchments against real patient-origin data where
+        available.</li>
+      <li data-i18n="future_4">Add a bike-mode catchment alongside drive/transit/walk.</li>
+    </ul>
+
+    <p class="notice" data-i18n="notice">Seven tracts (mostly zero-population airport/industrial tracts) have no
+      computable score and are shown in gray. Citation: Mao, L., &amp; Nekorchuk,
+      D. (2013). Measuring spatial accessibility to healthcare for populations
+      with multiple transportation modes. <em>Health &amp; Place</em>, 24, 115&ndash;122.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div>&copy; <span id="year">2026</span> Gideon Davinsky</div>
+    <div class="social">
+      <a href="mailto:gideondavinsky@gmail.com" data-i18n="social_email">Email</a>
+      <a href="https://www.linkedin.com/in/gideon-davinsky" data-i18n="social_linkedin">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  window.PAGE_I18N = {
+    en: {
+      doc_title: "Multimodal Healthcare Accessibility (E2SFCA) — Gideon Davinsky",
+      doc_description: "A multimodal E2SFCA model scoring 600 census tracts across metro Atlanta for hospital-bed access by drive, transit, and walk.",
+      p_title: "Multimodal Healthcare Accessibility (E2SFCA) — Atlanta",
+      p_lead: "How many hospital beds can a household actually reach — not as the crow flies, but by however they really travel? An Enhanced Two-Step Floating Catchment Area (E2SFCA) model scoring 600 census tracts across Fulton, DeKalb, and Clayton counties by drive, transit, and walk access to hospital beds.",
+      v_type: "Master’s thesis research (TFM)",
+      v_role: "Sole researcher",
+      v_area: "Fulton, DeKalb & Clayton counties, metro Atlanta — 600 census tracts",
+      mode_total_btn: "Total (multimodal)",
+      legend_hospital: "Hospital (sized by beds)",
+      toggle_hospitals_label: "Show hospitals",
+      v_data: "US Census ACS, CMS hospital provider data (bed counts), GTFS transit schedules, street network",
+      fig_caption: "Multimodal accessibility score (hospital beds per 1,000 residents) by census tract, with the 13 CMS-listed hospitals (red, sized by bed count). Click a tract or a hospital for its full profile.",
+      h_objective: "Objective",
+      p_objective: "Most healthcare-accessibility maps assume everyone drives. That systematically overstates access for car-free households and hides where transit and walking are actually doing the work — or failing to. This project built a multimodal accessibility surface that scores each tract by the mode(s) its residents actually use, to surface where hospital-bed access is genuinely thin versus merely far from a highway.",
+      h_method: "Method",
+      p_method_intro: "The model follows the multimodal Enhanced Two-Step Floating Catchment Area method (E2SFCA) described by Mao & Nekorchuk (2013), extending the original 2SFCA with distance decay and multiple travel modes instead of a single catchment radius.",
+      h_step1: "Step 1 — supply-to-demand ratio",
+      p_step1: "For every hospital, a catchment is drawn per mode (drive, transit, walk) using the travel times below. Within each catchment, its bed supply is divided by the population reachable within that same catchment (also weighted by distance decay), giving a supply-to-demand ratio for each mode.",
+      h_catchments: "Catchments & distance decay",
+      p_catchments: "Rather than a hard cutoff, each mode uses a tiered weighting scheme approximating a Gaussian decay — closer is weighted higher, and the weight steps down in stages out to the catchment’s edge:",
+      th_mode: "Mode", th_tiers: "Time tiers (weight)",
+      mode_drive: "Drive", mode_transit: "Transit", mode_walk: "Walk",
+      h_step2: "Step 2 — accessibility at each tract",
+      p_step2: "Each tract sums the (decay-weighted) supply-to-demand ratios of every hospital within reach, separately per mode. The three mode-specific scores are then combined into a single multimodal index, weighted by that tract’s own local mode share — so a tract where a third of residents commute by transit has its transit-mode score properly represented in its final score, rather than averaged away against two modes fewer of its residents use.",
+      p_step2b: "The three mode-specific scores are also available on their own (use the toggle above the map). Each represents the competitive bed accessibility available to a tract by that mode alone — still accounting for cross-modal competition for the same beds — rather than what a resident would see if the whole population switched to it.",
+      h_results: "Results",
+      p_results: "The final index ranges from 0 to 5.3 beds per 1,000 residents across the three counties (mean 2.67). Clayton County comes out clearly underserved — a mean of 1.37, versus 2.90 in DeKalb and 2.79 in Fulton. Access also rises with income: the highest-income tercile of tracts averages 2.98 versus 2.35 in the lowest. But the multimodal design surfaces a less obvious pattern too: tracts with little or no vehicle access do not score worse on average (2.86 vs. 2.39 for the lowest car-free tercile) — because those tracts concentrate in the urban core, where transit and shorter walk distances substantially offset the lack of a car. A drive-only model would have missed that entirely.",
+      h_recommendations: "Recommendations",
+      p_recommendations: "Target any near-term intervention — new transit routes, mobile clinics — at Clayton County first, given its clearly lower mean score; and, because car-free tracts are not uniformly underserved, prioritize by tract-level accessibility score rather than by vehicle-ownership rate alone.",
+      h_future: "Possible extensions",
+      future_1: "Extend the study area to the full 13-county Atlanta Regional Commission boundary.",
+      future_2: "Weight hospitals by service type (e.g. trauma level, maternity) rather than total bed count alone.",
+      future_3: "Validate the modeled catchments against real patient-origin data where available.",
+      future_4: "Add a bike-mode catchment alongside drive/transit/walk.",
+      notice: "Seven tracts (mostly zero-population airport/industrial tracts) have no computable score and are shown in gray. Citation: Mao, L., & Nekorchuk, D. (2013). Measuring spatial accessibility to healthcare for populations with multiple transportation modes. <em>Health & Place</em>, 24, 115–122.",
+      legend_title: "Beds / 1,000 residents",
+      legend_1: "< 1", legend_2: "1 – 2", legend_3: "2 – 3", legend_4: "3 – 4", legend_5: "4 – 5", legend_6: "≥ 5", legend_nodata: "No data",
+      pop_name: "Tract", pop_county: "County", pop_score: "Accessibility (beds/1,000)",
+      pop_pop: "Population", pop_income: "Median household income",
+      pop_no_vehicle: "No vehicle access (%)", pop_black: "Black or African American (%)",
+      pop_hispanic: "Hispanic/Latino (%)", pop_65plus: "Age 65+ (%)",
+      pop_drive: "Drive mode share (%)", pop_transit: "Transit mode share (%)", pop_walk: "Walk mode share (%)",
+      pop_min_drive: "Min. drive time to care (min)", pop_min_walk: "Min. walk time to care (min)", pop_min_transit: "Min. transit time to care (min)",
+      pop_hosp_name: "Hospital", pop_hosp_beds: "Number of beds", pop_hosp_type: "Type",
+      pop_hosp_address: "Address", pop_hosp_county: "County", pop_hosp_note: "Note"
+    },
+    es: {
+      doc_title: "Accesibilidad Sanitaria Multimodal (E2SFCA) — Gideon Davinsky",
+      doc_description: "Un modelo E2SFCA multimodal que puntúa 600 secciones censales del área metropolitana de Atlanta según su acceso a camas hospitalarias en coche, transporte público y a pie.",
+      p_title: "Accesibilidad Sanitaria Multimodal (E2SFCA) — Atlanta",
+      p_lead: "¿A cuántas camas hospitalarias puede acceder realmente un hogar, no en línea recta, sino según cómo se desplaza de verdad? Un modelo E2SFCA (Enhanced Two-Step Floating Catchment Area) que puntúa 600 secciones censales de los condados de Fulton, DeKalb y Clayton según su acceso a camas hospitalarias en coche, transporte público y a pie.",
+      v_type: "Investigación de Trabajo Fin de Máster (TFM)",
+      v_role: "Investigador único",
+      v_area: "Condados de Fulton, DeKalb y Clayton, área metropolitana de Atlanta — 600 secciones censales",
+      mode_total_btn: "Total (multimodal)",
+      legend_hospital: "Hospital (tamaño = camas)",
+      toggle_hospitals_label: "Mostrar hospitales",
+      v_data: "US Census ACS y datos de proveedores hospitalarios CMS (recuento de camas) — ambos datos abiertos federales—, horarios de transporte público (GTFS), red viaria",
+      fig_caption: "Puntuación de accesibilidad multimodal (camas hospitalarias por 1.000 habitantes) por sección censal, con los 13 hospitales listados por CMS (en rojo, tamaño según número de camas). Haz clic en una sección o en un hospital para ver su perfil completo.",
+      h_objective: "Objetivo",
+      p_objective: "La mayoría de los mapas de accesibilidad sanitaria asumen que todo el mundo conduce. Eso sobrestima sistemáticamente el acceso de los hogares sin coche y oculta dónde el transporte público y caminar están realmente cubriendo esa función, o no. Este proyecto construyó una superficie de accesibilidad multimodal que puntúa cada sección según el modo o modos que sus residentes usan realmente, para revelar dónde el acceso a camas hospitalarias es genuinamente escaso frente a simplemente alejado de una autovía.",
+      h_method: "Metodología",
+      p_method_intro: "El modelo sigue el método multimodal Enhanced Two-Step Floating Catchment Area (E2SFCA) descrito por Mao y Nekorchuk (2013), que extiende el 2SFCA original con decaimiento por distancia y múltiples modos de transporte en lugar de un único radio de influencia.",
+      h_step1: "Paso 1 — ratio de oferta y demanda",
+      p_step1: "Para cada hospital se traza un área de influencia por modo (coche, transporte público, a pie) según los tiempos de viaje siguientes. Dentro de cada área, su oferta de camas se divide entre la población alcanzable dentro de esa misma área (también ponderada por decaimiento de distancia), obteniendo un ratio de oferta-demanda por modo.",
+      h_catchments: "Áreas de influencia y decaimiento por distancia",
+      p_catchments: "En lugar de un corte estricto, cada modo usa un esquema de ponderación escalonado que aproxima un decaimiento gaussiano: cuanto más cerca, mayor peso, y el peso desciende por etapas hasta el borde del área de influencia:",
+      th_mode: "Modo", th_tiers: "Tramos de tiempo (peso)",
+      mode_drive: "Coche", mode_transit: "Transporte público", mode_walk: "A pie",
+      h_step2: "Paso 2 — accesibilidad por sección censal",
+      p_step2: "Cada sección censal suma los ratios de oferta-demanda (ponderados por decaimiento) de todos los hospitales a su alcance, por separado en cada modo. Las tres puntuaciones por modo se combinan después en un único índice multimodal, ponderado por el reparto modal local de esa sección — de modo que una sección donde un tercio de los residentes se desplaza en transporte público ve su puntuación de ese modo debidamente representada en el resultado final, en lugar de diluirse frente a otros dos modos que usan menos residentes.",
+      p_step2b: "Las tres puntuaciones por modo también están disponibles por separado (usa el selector encima del mapa). Cada una representa la accesibilidad competitiva a camas disponible en una sección solo con ese modo — teniendo igualmente en cuenta la competencia entre modos por las mismas camas — y no lo que vería un residente si toda la población cambiara a ese modo.",
+      h_results: "Resultados",
+      p_results: "El índice final va de 0 a 5,3 camas por 1.000 habitantes en los tres condados (media 2,67). El condado de Clayton queda claramente desatendido — una media de 1,37, frente a 2,90 en DeKalb y 2,79 en Fulton. El acceso también aumenta con la renta: el tercil de secciones de mayor renta promedia 2,98 frente a 2,35 en el de menor renta. Pero el diseño multimodal revela también un patrón menos evidente: las secciones con poco o ningún acceso a vehículo no puntúan peor de media (2,86 frente a 2,39 en el tercil con menos vehículos) — porque esas secciones se concentran en el núcleo urbano, donde el transporte público y las distancias a pie más cortas compensan sustancialmente la falta de coche. Un modelo basado solo en coche habría pasado esto por alto por completo.",
+      h_recommendations: "Recomendaciones",
+      p_recommendations: "Dirigir cualquier intervención a corto plazo —nuevas rutas de transporte público, clínicas móviles— en primer lugar al condado de Clayton, dada su puntuación media claramente inferior; y, dado que las secciones sin vehículo no están uniformemente desatendidas, priorizar según la puntuación de accesibilidad por sección y no solo según la tasa de posesión de vehículo.",
+      h_future: "Posibles ampliaciones",
+      future_1: "Extender el área de estudio a los 13 condados completos de la Atlanta Regional Commission.",
+      future_2: "Ponderar los hospitales por tipo de servicio (p. ej. nivel de trauma, maternidad) en lugar de solo el número total de camas.",
+      future_3: "Validar las áreas de influencia modeladas con datos reales de origen de pacientes, cuando estén disponibles.",
+      future_4: "Añadir un área de influencia en bicicleta junto a coche/transporte público/a pie.",
+      notice: "Siete secciones censales (en su mayoría tramos de aeropuerto o industriales sin población) no tienen puntuación calculable y se muestran en gris. Cita: Mao, L., y Nekorchuk, D. (2013). Measuring spatial accessibility to healthcare for populations with multiple transportation modes. <em>Health &amp; Place</em>, 24, 115–122.",
+      legend_title: "Camas / 1.000 habitantes",
+      legend_1: "< 1", legend_2: "1 – 2", legend_3: "2 – 3", legend_4: "3 – 4", legend_5: "4 – 5", legend_6: "≥ 5", legend_nodata: "Sin datos",
+      pop_name: "Sección censal", pop_county: "Condado", pop_score: "Accesibilidad (camas/1.000)",
+      pop_pop: "Población", pop_income: "Renta media del hogar",
+      pop_no_vehicle: "Sin acceso a vehículo (%)", pop_black: "Población negra (%)",
+      pop_hispanic: "Hispana/Latina (%)", pop_65plus: "Mayores de 65 años (%)",
+      pop_drive: "Reparto modal: coche (%)", pop_transit: "Reparto modal: transporte público (%)", pop_walk: "Reparto modal: a pie (%)",
+      pop_min_drive: "Tiempo mínimo en coche (min)", pop_min_walk: "Tiempo mínimo a pie (min)", pop_min_transit: "Tiempo mínimo en transporte público (min)",
+      pop_hosp_name: "Hospital", pop_hosp_beds: "Número de camas", pop_hosp_type: "Tipo",
+      pop_hosp_address: "Dirección", pop_hosp_county: "Condado", pop_hosp_note: "Nota"
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/site.js"></script>
+<script src="../js/map.js"></script>
+<script>
+  var e2sfca = GISPortfolio.initMap({
+    container: "map-e2sfca",
+    center: [-84.42, 33.75],
+    zoom: 9,
+    geojson: "../data/e2sfca-atlanta.geojson",
+    fill: {
+      colorBy: "score_per1000",
+      stops: [[0, "#d73027"], [1, "#fc8d59"], [2, "#fee08b"], [3, "#d9ef8b"], [4, "#91cf60"], [5, "#1a9850"]],
+      nullColor: "#94a3b8",
+      opacity: 0.78,
+      outline: "rgba(0,0,0,.15)"
+    },
+    popup: [
+      "name", "county", "score_per1000", "score_drive_per1000", "score_transit_per1000",
+      "score_walk_per1000", "pop", "med_hh_income", "pct_no_vehicle",
+      "pct_black", "pct_hispanic", "pct_65plus", "pct_drive", "pct_transit", "pct_walk",
+      "min_drive_time", "min_walk_time", "min_transit_time"
+    ],
+    popupLabels: {
+      name: { en: "Tract", es: "Sección censal" },
+      county: { en: "County", es: "Condado" },
+      score_per1000: { en: "Accessibility, total (beds/1,000)", es: "Accesibilidad total (camas/1.000)" },
+      score_drive_per1000: { en: "Accessibility, drive only (beds/1,000)", es: "Accesibilidad en coche (camas/1.000)" },
+      score_transit_per1000: { en: "Accessibility, transit only (beds/1,000)", es: "Accesibilidad en transporte público (camas/1.000)" },
+      score_walk_per1000: { en: "Accessibility, walk only (beds/1,000)", es: "Accesibilidad a pie (camas/1.000)" },
+      pop: { en: "Population", es: "Población" },
+      med_hh_income: { en: "Median household income", es: "Renta media del hogar" },
+      pct_no_vehicle: { en: "No vehicle access (%)", es: "Sin acceso a vehículo (%)" },
+      pct_black: { en: "Black or African American (%)", es: "Población negra (%)" },
+      pct_hispanic: { en: "Hispanic/Latino (%)", es: "Hispana/Latina (%)" },
+      pct_65plus: { en: "Age 65+ (%)", es: "Mayores de 65 (%)" },
+      pct_drive: { en: "Drive mode share, normalized (%)", es: "Reparto modal normalizado: coche (%)" },
+      pct_transit: { en: "Transit mode share, normalized (%)", es: "Reparto modal normalizado: transporte público (%)" },
+      pct_walk: { en: "Walk mode share, normalized (%)", es: "Reparto modal normalizado: a pie (%)" },
+      min_drive_time: { en: "Min. drive time to care (min)", es: "Tiempo mínimo en coche (min)" },
+      min_walk_time: { en: "Min. walk time to care (min)", es: "Tiempo mínimo a pie (min)" },
+      min_transit_time: { en: "Min. transit time to care (min)", es: "Tiempo mínimo en transporte público (min)" }
+    }
+  });
+
+  // Mode toggle: swap which score field drives the choropleth. All four
+  // modes share the same 0–5 color scale on purpose — transit- and
+  // walk-only accessibility really are that much lower almost everywhere,
+  // which is the point of comparing them against the multimodal total.
+  (function () {
+    var SCORE_STOPS = [[0, "#d73027"], [1, "#fc8d59"], [2, "#fee08b"], [3, "#d9ef8b"], [4, "#91cf60"], [5, "#1a9850"]];
+    var FIELD_BY_MODE = {
+      total: "score_per1000", drive: "score_drive_per1000",
+      transit: "score_transit_per1000", walk: "score_walk_per1000"
+    };
+    var mode = "total";
+
+    function t(key) { return (window.I18N && window.I18N.t(key)) || key; }
+
+    function applyMode() {
+      if (e2sfca.map.getLayer(e2sfca.id + "-fill")) {
+        e2sfca.map.setPaintProperty(e2sfca.id + "-fill", "fill-color",
+          GISPortfolio.stepExpr(FIELD_BY_MODE[mode], SCORE_STOPS, "#94a3b8"));
+      }
+      renderLegend();
+    }
+
+    function renderLegend() {
+      var el = document.getElementById("e2sfca-legend");
+      var modeLabel = mode === "total" ? t("mode_total_btn") : t("mode_" + mode);
+      var hospitalRow = document.getElementById("toggle-hospitals").checked
+        ? '<div class="row"><span class="swatch" style="background:#dc2626;border-radius:50%;border-color:#fff"></span>' +
+          t("legend_hospital") + "</div>"
+        : "";
+      el.innerHTML = "<b>" + t("legend_title") + " — " + modeLabel + "</b>" +
+        [["#d73027", "legend_1"], ["#fc8d59", "legend_2"], ["#fee08b", "legend_3"],
+         ["#d9ef8b", "legend_4"], ["#91cf60", "legend_5"], ["#1a9850", "legend_6"],
+         ["#94a3b8", "legend_nodata"]]
+          .map(function (it) {
+            return '<div class="row"><span class="swatch" style="background:' + it[0] + '"></span>' + t(it[1]) + "</div>";
+          }).join("") + hospitalRow;
+    }
+    window.__e2sfcaRenderLegend = renderLegend;
+
+    document.querySelectorAll('.season-toggle[aria-label="Mode"] .season-btn').forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        mode = btn.dataset.mode;
+        document.querySelectorAll('.season-toggle[aria-label="Mode"] .season-btn').forEach(function (b) {
+          b.setAttribute("aria-pressed", String(b === btn));
+        });
+        applyMode();
+      });
+    });
+
+    e2sfca.map.on("gp:layersready", applyMode);
+    document.addEventListener("langchange", renderLegend);
+    renderLegend();
+  })();
+
+  // Hospitals — a second source/layer added directly to the same map (the
+  // generic helper only wires up one source per map). Re-added automatically
+  // after a theme change since setStyle() wipes custom layers.
+  (function () {
+    var hospitalsData = null;
+    var hospitalsVisible = true; // survives a theme change re-adding the layer
+    function t(key) { return (window.I18N && window.I18N.t(key)) || key; }
+    function addHospitals() {
+      if (e2sfca.map.getSource("hospitals-src")) return;
+      var ready = hospitalsData ? Promise.resolve(hospitalsData)
+        : fetch("../data/hospitals-atlanta.geojson").then(function (r) { return r.json(); });
+      ready.then(function (data) {
+        hospitalsData = data;
+        e2sfca.map.addSource("hospitals-src", { type: "geojson", data: data });
+        e2sfca.map.addLayer({
+          id: "hospitals-circle", type: "circle", source: "hospitals-src",
+          layout: { visibility: hospitalsVisible ? "visible" : "none" },
+          paint: {
+            "circle-radius": ["interpolate", ["linear"], ["get", "beds"], 90, 6, 707, 16],
+            "circle-color": "#dc2626",
+            "circle-stroke-color": "#ffffff", "circle-stroke-width": 2
+          }
+        });
+        e2sfca.map.on("click", "hospitals-circle", function (e) {
+          var p = e.features[0].properties;
+          var rows = [
+            [t("pop_hosp_name"), p.name],
+            [t("pop_hosp_beds"), p.beds],
+            [t("pop_hosp_type"), p.type],
+            [t("pop_hosp_address"), p.address + (p.city ? ", " + p.city : "")],
+            [t("pop_hosp_county"), p.county]
+          ];
+          if (p.note) rows.push([t("pop_hosp_note"), p.note]);
+          var html = rows.filter(function (r) { return r[1] != null && r[1] !== ""; })
+            .map(function (r) { return "<b>" + r[0] + ":</b> " + r[1]; }).join("<br>");
+          GISPortfolio.openExclusivePopup(e2sfca.map, e.lngLat, html);
+        });
+        e2sfca.map.on("mouseenter", "hospitals-circle", function () { e2sfca.map.getCanvas().style.cursor = "pointer"; });
+        e2sfca.map.on("mouseleave", "hospitals-circle", function () { e2sfca.map.getCanvas().style.cursor = ""; });
+      });
+    }
+    e2sfca.map.on("gp:layersready", addHospitals);
+
+    document.getElementById("toggle-hospitals").addEventListener("change", function (e) {
+      hospitalsVisible = e.target.checked;
+      if (e2sfca.map.getLayer("hospitals-circle")) {
+        e2sfca.map.setLayoutProperty("hospitals-circle", "visibility", hospitalsVisible ? "visible" : "none");
+      }
+      if (window.__e2sfcaRenderLegend) window.__e2sfcaRenderLegend();
+    });
+  })();
+</script>
+</body>
+</html>
