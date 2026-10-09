@@ -1,77 +1,49 @@
-# GIS Portfolio
+# Gideon Davinsky — GIS & Mobility Portfolio
 
-A static personal website to showcase academic and professional GIS work. No build
-step, no framework — plain HTML, CSS, and vanilla JS, with interactive maps powered by
-[MapLibre GL JS](https://maplibre.org/) and free [OpenFreeMap](https://openfreemap.org/)
-base tiles.
+A bilingual static portfolio for a GIS and urban data analyst based in Madrid. It pairs concise project summaries with interactive case studies in multimodal healthcare accessibility and flood-risk resilience. The site uses plain HTML, CSS and vanilla JavaScript, MapLibre GL JS for interactive maps, and OpenFreeMap vector basemaps.
 
 ## Structure
 
-```
-index.html            Landing page — hero, featured projects, "what I do"
-projects.html         Full project list with Academic / Professional filter
-about.html            Bio, education, experience, skills, CV link
-projects/
-  e2sfca-atlanta.html                  Detail page + interactive map
-  pedestrian-accessibility-index.html  Detail page + interactive map
-  optimal-walking-routes.html          Detail page + interactive map
-css/main.css          All styling; light + dark themes via CSS variables
-js/
-  projects-data.js    >>> EDIT THIS to add/change projects (drives the cards)
-  site.js             Theme toggle, mobile nav, card rendering, filtering
-  map.js              GISPortfolio.initMap() — MapLibre helper for project pages
-data/                 Real project GeoJSON (trimmed/aggregated from source layers)
-scripts/              How each data/*.geojson was built from the original ArcGIS
-                       exports — see scripts/README.md to regenerate one
-assets/               Images, CV.pdf, thumbnails (see assets/README.md)
-```
+- `index.html` — editorial landing page, featured studies, methods and contact CTA
+- `projects.html` — topic-filtered gallery of case studies
+- `about.html` — background, experience, skills and bilingual CV downloads
+- `contact.html` — email and professional contact links
+- `projects/` — Atlanta healthcare-accessibility and Logroño flood-resilience case studies
+- `css/main.css` — responsive Civic Cartography design system and light/dark themes
+- `js/projects-data.js` — bilingual project-card content, topics and links
+- `js/site.js` / `js/i18n.js` — site behavior, card rendering and language switching
+- `js/map.js` — shared MapLibre layer, popup, legend and theme helpers
+- `data/` — the original GeoJSON layers used by the interactive case-study maps
+- `assets/CV_EN.pdf`, `assets/CV_ES.pdf` — original downloadable CVs
+- `assets/maps/` — small SVG previews derived from actual project GeoJSON
+- `scripts/build_map_previews.py` — reproducible generator for those map previews
 
 ## Run locally
 
-Browsers block `fetch()` of local files, so the maps need a local web server (not
-`file://`). From this folder:
+Use an HTTP server so case-study pages can fetch their GeoJSON files:
 
 ```bash
-python -m http.server 8000
+python3 -m http.server 8000
 ```
 
-Then open <http://localhost:8000>. Any static server works (`npx serve`, VS Code Live
-Server, etc.).
+Then open <http://localhost:8000>. The interactive base tiles, MapLibre script and Google Fonts are loaded from their respective public services.
 
-## Make it yours
+## Update portfolio content
 
-1. **Projects:** edit `js/projects-data.js`. Each entry becomes a card. Set `featured: true`
-   to show it on the home page. Point `page` at a detail file in `projects/` (or leave it
-   `""` for a card with no link yet).
-3. **New project page:** copy one of the files in `projects/`, swap the text, and update the
-   `GISPortfolio.initMap({...})` call at the bottom to point at your GeoJSON.
-4. **Maps:** drop a GeoJSON file in `data/`. `initMap` auto-styles polygons, lines, and
-   points; pass `fill.colorBy` + `fill.stops` for a choropleth, `popup: [...]` for the
-   attributes to show on click, and `legend` for the legend box. Reproject to EPSG:4326
-   first (`ogr2ogr -t_srs EPSG:4326 out.geojson in.shp`).
-5. **CV / images:** see `assets/README.md`.
-6. **Colors:** edit the `--accent` variables at the top of `css/main.css`.
+1. Update the bilingual objects and project metadata in `js/projects-data.js`.
+2. For a new interactive case study, add its page under `projects/`, store its source GeoJSON in `data/`, and call `GISPortfolio.initMap()` as shown by the existing case studies.
+3. Rebuild the gallery previews with `python3 scripts/build_map_previews.py` after updating the source GeoJSON.
+4. Keep English and Spanish copy aligned in each page's `PAGE_I18N` object.
 
-## Deploy (free options)
+## Source and provenance
 
-**GitHub Pages**
-```bash
-git init && git add . && git commit -m "Initial portfolio"
-git branch -M main
-git remote add origin https://github.com/yourhandle/portfolio.git
-git push -u origin main
-```
-Then in the repo: Settings → Pages → Source: `main` / root. Live at
-`https://yourhandle.github.io/portfolio/`.
+The redesign retains the owner's existing content, CVs, case studies and GeoJSON from the public portfolio:
 
-**Netlify / Cloudflare Pages:** drag-and-drop this folder, or connect the repo. No build
-command; publish directory is the repo root.
+- Live site: <https://gideondavinsky.github.io/Portfolio-Gideon-Davinsky/>
+- GitHub repository: <https://github.com/gideondavinsky/Portfolio-Gideon-Davinsky>
 
-A custom domain (e.g. `yourname.dev`) can be pointed at any of these in their DNS settings.
+The Logroño and Atlanta preview maps are drawn from `data/logrono-riesgo.geojson` and `data/e2sfca-atlanta.geojson`; their values are not simulated. The detail pages keep their interactive maps, original project methods and attribution.
 
-## Notes
+## GitHub Pages
 
-- OpenFreeMap is free for production use with no API key. If you prefer another base map
-  (MapTiler, Stadia, Mapbox), change the `STYLES` URLs in `js/map.js` and add your key.
-- Everything works offline except the base map tiles, Google Fonts, and the MapLibre CDN
-  script. To fully self-host, download those into `assets/vendor/` and update the links.
+The repository is a static site and needs no build step. The current GitHub Pages source is the root directory on `main`. The existing source project documents other static hosting options in GitHub's Pages settings or a static hosting service.
