@@ -87,8 +87,10 @@
         '<span class="tag">' + esc(tag) + '</span>' +
         '<h3>' + esc(title) + '</h3>' +
         '<p class="muted">' + esc(blurb) + '</p>' +
-        '<div class="meta">' + esc((p.tools || []).slice(0, 3).join(" · ")) +
-          (p.year ? '<br>' + p.year : '') + '</div>' +
+        '<div class="pill-row project-tags">' + (p.tools || []).slice(0, 4).map(function (tool) {
+          return '<span class="pill">' + esc(tool) + '</span>';
+        }).join("") + '</div>' +
+        '<div class="meta">' + esc(p.year || "") + '</div>' +
       '</div>';
     if (p.page) {
       return '<article class="card"><a class="card-link" href="' + rel(p.page) + '">' + inner + '</a></article>';
@@ -107,7 +109,7 @@
     var grid = document.getElementById("project-grid");
     if (!grid) return;
 
-    var list = filterState === "all" ? all : all.filter(function (p) { return p.category === filterState; });
+    var list = filterState === "all" ? all : all.filter(function (p) { return p.topic === filterState; });
     grid.innerHTML = list.map(cardMarkup).join("") ||
       '<p class="muted">' + esc(lang() === "es" ? "Todavía no hay proyectos en esta categoría." : "No projects in this category yet.") + '</p>';
   }

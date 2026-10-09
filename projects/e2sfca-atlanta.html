@@ -12,36 +12,37 @@
 <meta property="og:image" content="../assets/og/e2sfca.png">
 <meta property="og:url" content="projects/e2sfca-atlanta.html">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%230f766e' d='M16 2a10 10 0 0 0-10 10c0 7 10 18 10 18s10-11 10-18A10 10 0 0 0 16 2z'/%3E%3Ccircle cx='16' cy='12' r='4' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23a63d2f' d='M16 2a10 10 0 0 0-10 10c0 7 10 18 10 18s10-11 10-18A10 10 0 0 0 16 2z'/%3E%3Ccircle cx='16' cy='12' r='4' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
 
 <header class="site-header">
-  <nav class="nav">
+  <nav class="nav" aria-label="Main navigation">
     <a class="brand" href="../index.html">
-      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><path fill="var(--accent)" d="M16 2a10 10 0 0 0-10 10c0 7 10 18 10 18s10-11 10-18A10 10 0 0 0 16 2z"/><circle cx="16" cy="12" r="4" fill="#fff"/></svg>
+      <svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="1" width="38" height="38" rx="9" fill="var(--accent)"/><path d="M9 30V10h8l14 20V10" fill="none" stroke="var(--bg)" stroke-width="2.6"/><circle cx="17" cy="20" r="3" fill="var(--bg)"/><circle cx="31" cy="10" r="2.2" fill="var(--bg)"/></svg>
       Gideon Davinsky
     </a>
-    <ul class="nav-links">
+    <ul class="nav-links" id="primary-navigation">
       <li><a href="../index.html" data-i18n="nav_home">Home</a></li>
       <li><a href="../projects.html" data-i18n="nav_projects">Projects</a></li>
       <li><a href="../about.html" data-i18n="nav_about">About / CV</a></li>
       <li><a href="../contact.html" data-i18n="nav_contact">Contact</a></li>
     </ul>
-    <div style="display:flex;gap:.5rem">
+    <div class="nav-tools">
       <button class="lang-toggle" data-i18n-aria="lang_toggle_aria" title="Español / English">ES</button>
       <button class="theme-toggle" data-i18n-aria="theme_toggle_aria" title="Toggle theme">◐</button>
-      <button class="nav-toggle" data-i18n-aria="menu_aria" aria-expanded="false">☰</button>
+      <button class="nav-toggle" data-i18n-aria="menu_aria" aria-controls="primary-navigation" aria-expanded="false">☰</button>
     </div>
   </nav>
 </header>
 
-<main class="container section">
+<main id="main-content" class="container section">
   <a class="back-link" href="../projects.html">&larr; <span data-i18n="back_all_projects">All projects</span></a>
   <div class="project-header">
     <span class="tag" data-i18n="tag_academic">Academic</span>
@@ -74,7 +75,7 @@
   </label>
 
   <figure class="map-figure">
-    <div id="map-e2sfca" class="map"></div>
+    <div id="map-e2sfca" class="map" role="region" aria-label="Interactive GIS map"></div>
     <div id="e2sfca-legend" class="map-legend" style="max-width:320px;margin:.85rem 0 0"></div>
     <figcaption data-i18n="fig_caption">Multimodal accessibility score (hospital beds per 1,000 residents) by census
       tract, with the 13 CMS-listed hospitals (red, sized by bed count). Click a
@@ -175,7 +176,7 @@
     <div>&copy; <span id="year">2026</span> Gideon Davinsky</div>
     <div class="social">
       <a href="mailto:gideondavinsky@gmail.com" data-i18n="social_email">Email</a>
-      <a href="https://www.linkedin.com/in/gideon-davinsky" data-i18n="social_linkedin">LinkedIn</a>
+      <a href="https://github.com/gideondavinsky/Portfolio-Gideon-Davinsky" target="_blank" rel="noopener" data-i18n="social_github">GitHub</a><a href="https://www.linkedin.com/in/gideon-davinsky" data-i18n="social_linkedin">LinkedIn</a>
     </div>
   </div>
 </footer>
